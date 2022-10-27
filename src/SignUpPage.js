@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "./AuthContext";
-import logo from "./img/logo.svg"
 
 export default function SignUpPage() {
     const [form, setForm] = useState({ email: "", name: "", cpf: "", password: "" })

@@ -1,51 +1,66 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "./AuthContext";
 import logo from "./img/logo.svg"
 
-export default function LoginPage(){
-    const {user, setUser} = useContext(AuthContext)
-    const [form, setForm] = useState({email: "", password:""})
-        
+export default function LoginPage() {
+    const { user, setUser } = useContext(AuthContext)
+    const [form, setForm] = useState({ email: "", password: "" })
     const navigate = useNavigate()
-    function post(e){
+    console.log(user)
+
+
+
+    useEffect(() => {
+        if (user) {
+            user.membership === null ? navigate("/subscriptions") : navigate("/home")
+        }
+    }, [user])
+    function post(e) {
         e.preventDefault()
         const promise = axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/auth/login", form)
         promise.then(processSucess)
         promise.catch(res => alert(res.response.data))
     }
-
-    function processSucess(res){
+    function processSucess(res) {
+        /*  const newUser = res.data
+         newUser.token = res.data.token
+         newUser.image = res.data.image
+         localStorage.setItem("token", res.data.token)
+         localStorage.setItem("image", res.data.image)
+         setUser(newUser) */
         setUser(res.data)
-        if(res.data.membership === null){
+        if (res.data.membership === null) {
             navigate("/subscriptions")
-        }else{
+        } else {
             navigate("/home")
         }
+
+    }
+    function handleChange(e) {
+        setForm({ ...form, [e.target.name]: e.target.value })
     }
 
-    function handleChange(e){
-        setForm({...form, [e.target.name]: e.target.value})
-    }
-    return(
+
+    return (
         <Container>
-            <img src={logo}/>
+            <img src={logo} />
             <form onSubmit={post}>
-            <input
-             placeholder="E-mail"
-             type="email"
-             name="email"
-             value={form.email}
-             onChange={handleChange}/>
-            <input 
-            placeholder="Senha"
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}/>
-            <button type="submit">ENTRAR</button>
+                <input
+                    placeholder="E-mail"
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange} />
+                <input
+                    placeholder="Senha"
+                    type="password"
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange} />
+                <button type="submit">ENTRAR</button>
             </form>
             <Link to="/sign-up">
                 <p>Não possui uma conta? Cadastre-se</p>

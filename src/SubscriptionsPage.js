@@ -3,30 +3,44 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "./AuthContext";
-import logo from "./img/logo.svg"
+import Loading from "./Loading.js"
 
 export default function SubscriptionsPage() {
     const { user } = useContext(AuthContext)
-    const config = { headers: { "Authorization": `Bearer ${user.token}` } }
     const [memberships, setMemberships] = useState([{ image: "", price: "" }])
-
-
-    useEffect(() =>
+    const [loadingPage, setLoadingPage] = useState(true)
+    
+    useEffect(() => {
+        if(!user){
+            return
+        }
+        const config = { headers: { "Authorization": `Bearer ${user.token}` } }
         axios.get("https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions/memberships", config)
-            .then(res=> setMemberships(res.data)))
-return (
-    <Container>
-        <h1>Escolha seu plano</h1>
-        {memberships.map((m) =>   
-        <Link to={`/subscriptions/${m.id}`}>
-            <PlanContainer>
-                <img src={logo}/>
-                <p>R$ {m.price}</p>
-            </PlanContainer>
-            </Link>)}
+            .then(res => {
+                setMemberships(res.data)
+                setLoadingPage(false)
+            })
+    }, [user])
+console.log(user)
 
-    </Container>
-)
+if(loadingPage === true){
+    return(
+        <Loading/>
+    )
+}
+    return (
+        <Container>
+            <h1>Escolha seu Plano</h1>
+            {memberships.map((m) =>
+                <Link to={`/subscriptions/${m.id}`}>
+                    <PlanContainer>
+                        <img src={m.image} />
+                        <p>R$ {m.price}</p>
+                    </PlanContainer>
+                </Link>)}
+
+        </Container>
+    )
 }
 
 
