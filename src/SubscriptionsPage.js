@@ -9,9 +9,9 @@ export default function SubscriptionsPage() {
     const { user } = useContext(AuthContext)
     const [memberships, setMemberships] = useState([{ image: "", price: "" }])
     const [loadingPage, setLoadingPage] = useState(true)
-    
+
     useEffect(() => {
-        if(!user){
+        if (!user) {
             return
         }
         const config = { headers: { "Authorization": `Bearer ${user.token}` } }
@@ -20,24 +20,28 @@ export default function SubscriptionsPage() {
                 setMemberships(res.data)
                 setLoadingPage(false)
             })
+            .catch(res => alert(res.response.data.message))
     }, [user])
-console.log(user)
 
-if(loadingPage === true){
-    return(
-        <Loading/>
-    )
-}
+
+    if (loadingPage === true) {
+        return (
+            <Loading />
+        )
+    }
     return (
         <Container>
             <h1>Escolha seu Plano</h1>
             {memberships.map((m) =>
-                <Link to={`/subscriptions/${m.id}`}>
+                <Link to={`/subscriptions/${m.id}`} key={m.id} style={{ textDecoration: "none" }}>
+
                     <PlanContainer>
                         <img src={m.image} />
-                        <p>R$ {m.price}</p>
+                        <p>R$ {m.price.replace(".",",")}</p>
                     </PlanContainer>
-                </Link>)}
+                </Link>
+
+            )}
 
         </Container>
     )
@@ -84,7 +88,5 @@ font-weight: 700;
 font-size: 24px;
 line-height: 28px;
 color: #FFFFFF;
-text-decoration: none;
-
 }
 `

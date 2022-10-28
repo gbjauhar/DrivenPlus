@@ -8,6 +8,7 @@ import money from "./img/fa-solid_money-bill-wave.svg"
 import list from "./img/fluent_clipboard-task-list-rtl-20-regular.svg"
 import ReactModal from "react-modal";
 import Loading from "./Loading.js"
+import close from "./img/fa-solid_window-close.svg"
 
 export default function PlanPage() {
     const { id } = useParams()
@@ -29,7 +30,7 @@ export default function PlanPage() {
 
 
     useEffect(() => {
-        if(!user){
+        if (!user) {
             return
         }
         const config = { headers: { "Authorization": `Bearer ${user.token}` } }
@@ -39,31 +40,40 @@ export default function PlanPage() {
                 setPerks(res.data.perks)
                 setLoadingPage(false)
             })
+            .catch(res => alert(res.response.data.message))
     }, [])
 
     function post() {
         const config = { headers: { "Authorization": `Bearer ${user.token}` } }
         axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/subscriptions", form, config)
             .then(res => {
-                setUser({...user, membership: res.data.membership})
+                setUser({ ...user, membership: res.data.membership })
                 console.log(user)
                 navigate("/home")
             })
             .catch(res => alert(res.response.data))
     }
 
+    function handleKeyUp(e) {
+        e.target.maxLength = 5
+        let value = e.target.value
+        value = value.replace(/^(\d{2})(\d)/, "$1/$2")
+        e.target.value = value
+
+    }
+
     function handleChange(e) {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
-    if(loadingPage === true){
-        return(
-            <Loading/>
+    if (loadingPage === true) {
+        return (
+            <Loading />
         )
     }
     return (
         <Container>
-             <Link to="/subscriptions">
+            <Link to="/subscriptions">
                 <Arrow src={back} />
             </Link>
             <LogoContainer>
@@ -77,7 +87,7 @@ export default function PlanPage() {
                     <h2>Benefícios:</h2>
                 </Title>
                 {perks.map((p, indx) =>
-                    <p>{indx + 1}. {p.title}</p>)}
+                    <p key={indx}>{indx + 1}. {p.title}</p>)}
                 <Title>
                     <img src={money} />
                     <h2>Preço:</h2>
@@ -109,6 +119,7 @@ export default function PlanPage() {
                         onChange={handleChange} />
                     <input
                         placeholder="Validade"
+                        onKeyUp={handleKeyUp}
                         name="expirationDate"
                         value={form.expirationDate}
                         onChange={handleChange} />
@@ -117,39 +128,34 @@ export default function PlanPage() {
             </form>
             <ReactModal
                 isOpen={modalIsOpen}
+                ariaHideApp={false}
                 style={
                     {
                         overlay: {
-                            background: "rgba(0, 0, 0, 0.7)",
+                            background: "",
 
                         }, content: {
                             display: "flex",
                             flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            margin: "auto auto",
-                            width: "230px",
-                            height: "210px",
-                            borderRadius: '12px',
-                            fontFamily: 'Roboto',
-                            fontStyle: "normal",
-                            fontWeight: 700,
-                            fontSize: "18px",
-                            lineHeight: "21px",
-                            textAlign: "center",
-                            color: "#000000",
-                            paddingTop: "33px",
-                            paddingLeft: "22px",
-                            paddingRight: "22px"
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: "rgba(0, 0, 0, 0.7)",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            border: "",
+                            position: "relative"
                         }
                     }}>
-                        <div>
-                <h1>Tem certeza que deseja assinar o plano {plans.name} (R$ {plans.price})?</h1>
-                <ButtonContainer>
-                    <ModalNo onClick={() => setModalIsOpen(false)}>Não</ModalNo>
-                    <ModalYes onClick={post}>SIM</ModalYes>
-                </ButtonContainer>
-                </div>
+                <ImageClose src={close} onClick={() => setModalIsOpen(false)} />
+                <ModalContainer>
+                    <h1>Tem certeza que deseja assinar o plano {plans.name} (R$ {plans.price})?</h1>
+                    <ButtonContainer>
+                        <ModalNo onClick={() => setModalIsOpen(false)}>Não</ModalNo>
+                        <ModalYes onClick={post}>SIM</ModalYes>
+                    </ButtonContainer>
+                </ModalContainer>
             </ReactModal>
         </Container>
     )
@@ -240,6 +246,24 @@ display: flex;
 flex-direction: column;
 align-items: initial;
 margin-left: 40px;
+
+
+p{
+
+font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 16px;
+color: #FFFFFF;
+}
+
+
+`
+
+const Title = styled.div`
+display:flex;
+align-items: flex-end;
 h2{
     margin-top: 12px;
 
@@ -252,24 +276,10 @@ line-height: 19px;
 color: #FFFFFF;
 }
 
-p{
-
-font-family: 'Roboto';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 16px;
-color: #FFFFFF;
-}
-
 img{
     width: 18px;
 height: 18px;
 }
-`
-
-const Title = styled.div`
-display:flex;
 `
 
 const ModalNo = styled.button`
@@ -309,11 +319,36 @@ align-items: center;
 justify-content: center;
 `
 
-const Close = styled.div`
-    display: block;
-    float:right;
-    position:relative;
-    top:-50px;
-    right: -10px;
-    z-index: 1002;
+
+
+
+const ModalContainer = styled.div`
+display:flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width: 230px;
+margin-left: 40px;
+height: 190px;
+background: #FFFFFF;
+border-radius: 12px;
+margin-top: 210px;
+font-family: 'Roboto';
+                            font-style: "normal";
+                            font-weight: 700;
+                            font-size: 20px;
+                            line-height: 21px;
+                            text-align: center;
+                            color: #000000;
+                            padding-top: 28px;
+                            padding-left: 22px;
+                            padding-right: 22px;
+`
+
+const ImageClose = styled.img`
+width: 28px;
+height: 28px;
+display: flex;
+position: absolute;
+right: 55px;
 `

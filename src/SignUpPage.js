@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "./AuthContext";
@@ -12,13 +12,30 @@ export default function SignUpPage() {
     function signup(e) {
         e.preventDefault()
         axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/auth/sign-up", form)
-        .then(navigate("/"))
-        .catch(res => alert(res.response))
+        .then(res => {
+            console.log(res.data)
+            navigate("/")
+        })
+            .catch(res => {
+                alert(res.response.data.message)
+            })
+            
 
     }
+
+    function handleKeyUp(e) {
+        e.target.maxLength = 14
+        let value = e.target.value
+        value = value.replace(/^(\d{3})(\d{3})(\d{3})/, "$1-$2-$3.4")
+        e.target.value = value
+
+    }
+
     function handleChange(e) {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
+
+
     return (
         <Container>
             <form onSubmit={signup}>
@@ -29,11 +46,10 @@ export default function SignUpPage() {
                     value={form.name}
                     onChange={handleChange} />
                 <input
+                    onKeyUp={handleKeyUp}
                     placeholder="CPF"
-                    type="number"
                     name="cpf"
-                    value={form.cpf}
-                    onChange={handleChange} />
+                 onChange={handleChange}/>
                 <input
                     placeholder="E-mail"
                     type="email"
@@ -46,7 +62,7 @@ export default function SignUpPage() {
                     name="password"
                     value={form.password}
                     onChange={handleChange} />
-                <button type="submit">Entrar</button>
+                <button type="submit">CADASTRAR</button>
             </form>
             <Link to="/">
                 <p>Já possui uma conta? Entre</p>
@@ -87,7 +103,6 @@ color: #7E7E7E;
 }
 
 button{
-    padding: 18px 122px;
 gap: 10px;
 margin-top: 8px;
 margin-bottom: 24px;

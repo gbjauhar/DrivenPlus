@@ -24,9 +24,8 @@ export default function HomePage() {
                 setPerks(res.data.perks)
                 setPageLoading(false)
             })
-    /*}else{
-        navigate("/")
-    }*/}, []) 
+            .catch(res => alert(res.response.data.message))
+    }, []) 
 
 if(pageLoading === true){
     return <Loading/>
@@ -40,18 +39,21 @@ if(pageLoading === true){
             console.log(res.data)
             navigate("/subscriptions")
         })
+        .catch(res => 
+            alert(res.response.data.message))
     }
     return (
         <Container>
             <Link to={`/users/${user.id}`}>
             <User src={userPic} />
             </Link>
-            <img src={plan.image} />
+            <PlanImage src={plan.image} />
             <h1>Olá, {user.name}</h1>
             <Perks>
                 {perks.map((p)=>
+                <a href={p.link} key={p.id}>
                 <button>
-                    <a href={p.link}>{p.title}</a></button>
+                    {p.title}</button></a>
                 )}
 
 
@@ -80,20 +82,29 @@ font-size: 24px;
 line-height: 28px;
 margin-bottom:53px;
 color: #FFFFFF;
+margin-top: 95px;
 
 }
-img{
-    width:70px;
-    height:50px;
-    }
+
 `
 
 const User = styled.img`
 display: flex;
 justify-content: flex-end;
 align-items: flex-end;
+width: 34px;
+height: 34px;
+position: absolute;
+right: 22px;
+top: 22px;
 `
-
+const PlanImage = styled.img`
+width:70px;
+    height:50px;
+    position: absolute;
+    top: 32px;
+    left: 38px;
+`
 const Perks = styled.div`
 display: flex;
 flex-direction: column;
@@ -151,8 +162,8 @@ color: #FFFFFF;
 `
 
 const Footer = styled.div`
+position: absolute;
 display: flex;
-margin-top:135px;
 flex-direction: column;
-margin-bottom:12px;
+bottom:12px;
 `

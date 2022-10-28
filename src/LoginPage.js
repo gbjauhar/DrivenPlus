@@ -22,7 +22,7 @@ export default function LoginPage() {
         e.preventDefault()
         const promise = axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/auth/login", form)
         promise.then(processSucess)
-        promise.catch(res => alert(res.response.data))
+        promise.catch(res => alert(res.response.data.message))
     }
     function processSucess(res) {
         /*  const newUser = res.data

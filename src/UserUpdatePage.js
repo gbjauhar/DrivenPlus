@@ -1,23 +1,31 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "./AuthContext";
 import back from "./img/arrow-back-outline.svg"
+import React from 'react'
 
 export default function UserUpdatePage() {
-    const { user } = useContext(AuthContext)
-    const [form, setForm] = useState({ name: user.name, cpf: user.cpf, email: user.email, currentPassword: user.password, newPassword: "" })
-
+    const navigate = useNavigate()
+    const { id } = useParams()
+    const { user, setUser } = useContext(AuthContext)
+    const [form, setForm] = useState({ name:"", cpf: user.cpf, email: "", currentPassword: "", newPassword: "" })
+    console.log(user)
     function handleChange(e) {
         setForm({ ...form, [e.target.name]: e.target.value })
-        console.log(form)
     }
+    console.log(form)
 
     function post(e) {
         e.preventDefault()
         const config = { headers: { "Authorization": `Bearer ${user.token}` } }
         axios.put("https://mock-api.driven.com.br/api/v4/driven-plus/users/", form, config)
+        .then(res => {
+           setUser({...user, name:res.data.name, email:res.data.email, password:res.data.password})
+           navigate(`/users/${id}`)
+        })
+        .catch(res =>alert(res.response.data.message))
     }
 
     return (
@@ -27,27 +35,33 @@ export default function UserUpdatePage() {
             </Link>
             <InputsContainer onSubmit={post}>
                 <input
+                type="text"
                     placeholder={user.name}
                     name="name"
                     value={form.name}
                     onChange={handleChange}
                 />
                 <input
-                    placeholder={user.cpf}
-                    disabled />
+                placeholder={user.cpf}
+                disabled
+                     />
                 <input
+                type="email"
                     placeholder={user.email}
                     name="email"
                     value={form.email}
                     onChange={handleChange}
                 />
                 <input
+                type="password"
                     placeholder="Senha atual"
                     name="currentPassword"
                     value={form.currentPassword}
                     onChange={handleChange}
+                    required
                 />
                 <input
+                type="password"
                     placeholder="Nova senha"
                     name="newPassword"
                     value={form.newPassword}
@@ -66,7 +80,7 @@ flex-direction: column;
 img{
     width: 28px;
 height: 32px;
-margin-bottom: 154px;
+margin-bottom: 86px;
 margin-top: 24px;
 margin-left: 22px;
 }
