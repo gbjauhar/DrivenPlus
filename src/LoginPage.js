@@ -46,7 +46,7 @@ export default function LoginPage() {
 
     return (
         <Container>
-            <img src={logo} />
+            <img src={logo} alt="Logo"/>
             <form onSubmit={post}>
                 <input
                     placeholder="E-mail"

@@ -1,32 +1,31 @@
 import axios from "axios";
-import { useCallback, useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { AuthContext } from "./AuthContext";
 
 export default function SignUpPage() {
     const [form, setForm] = useState({ email: "", name: "", cpf: "", password: "" })
-    const { user, setUser } = useContext(AuthContext)
     const navigate = useNavigate()
 
     function signup(e) {
         e.preventDefault()
         axios.post("https://mock-api.driven.com.br/api/v4/driven-plus/auth/sign-up", form)
-        .then(res => {
-            console.log(res.data)
-            navigate("/")
-        })
+            .then(res => {
+                console.log(res.data)
+                navigate("/")
+            })
             .catch(res => {
                 alert(res.response.data.message)
             })
-            
+
 
     }
 
     function handleKeyUp(e) {
         e.target.maxLength = 14
         let value = e.target.value
-        value = value.replace(/^(\d{3})(\d{3})(\d{3})/, "$1-$2-$3.4")
+        value = value.replace(/\D/g, "")
+        value = value.replace(/^(\d{3})(\d{3})(\d{3})/, "$1-$2-$3.")
         e.target.value = value
 
     }
@@ -44,24 +43,28 @@ export default function SignUpPage() {
                     type="text"
                     name="name"
                     value={form.name}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                    required />
                 <input
                     onKeyUp={handleKeyUp}
                     placeholder="CPF"
                     name="cpf"
-                 onChange={handleChange}/>
+                    onChange={handleChange}
+                    required />
                 <input
                     placeholder="E-mail"
                     type="email"
                     name="email"
                     value={form.email}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                    required />
                 <input
                     placeholder="Senha"
                     type="password"
                     name="password"
                     value={form.password}
-                    onChange={handleChange} />
+                    onChange={handleChange}
+                    required />
                 <button type="submit">CADASTRAR</button>
             </form>
             <Link to="/">

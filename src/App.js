@@ -15,9 +15,8 @@ export default function App() {
 
     const [user, setUser] = useLocalStorage("user", null)
 
-
     return (
-        <AuthContext.Provider value = {{user, setUser}}>
+        <AuthContext.Provider value={{user, setUser}}>
             <BrowserRouter>
                 <GlobalStyle />
                 <Routes>

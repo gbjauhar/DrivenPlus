@@ -36,8 +36,8 @@ export default function SubscriptionsPage() {
                 <Link to={`/subscriptions/${m.id}`} key={m.id} style={{ textDecoration: "none" }}>
 
                     <PlanContainer>
-                        <img src={m.image} />
-                        <p>R$ {m.price.replace(".",",")}</p>
+                        <img src={m.image} alt="Logo"/>
+                        <p>R$ {m.price.replace(".", ",")}</p>
                     </PlanContainer>
                 </Link>
 

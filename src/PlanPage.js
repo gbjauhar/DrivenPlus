@@ -78,18 +78,18 @@ export default function PlanPage() {
             </Link>
             <LogoContainer>
                 <img src={plans.image} onClick={() => setModalIsOpen(true)
-                } />
+                } alt="Logo" />
                 <h1>{plans.name}</h1>
             </LogoContainer>
             <Text>
                 <Title>
-                    <img src={list} />
+                    <img src={list} alt="Task list"/>
                     <h2>Benefícios:</h2>
                 </Title>
                 {perks.map((p, indx) =>
                     <p key={indx}>{indx + 1}. {p.title}</p>)}
                 <Title>
-                    <img src={money} />
+                    <img src={money} alt="Money"/>
                     <h2>Preço:</h2>
                 </Title>
                 <p>R$ {plans.price} cobrados mensalmente</p>
@@ -148,7 +148,7 @@ export default function PlanPage() {
                             position: "relative"
                         }
                     }}>
-                <ImageClose src={close} onClick={() => setModalIsOpen(false)} />
+                <ImageClose src={close} onClick={() => setModalIsOpen(false)} alt="Close"/>
                 <ModalContainer>
                     <h1>Tem certeza que deseja assinar o plano {plans.name} (R$ {plans.price})?</h1>
                     <ButtonContainer>

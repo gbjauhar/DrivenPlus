@@ -4,27 +4,27 @@ import { useContext } from "react"
 import { AuthContext } from "./AuthContext"
 import { Link } from "react-router-dom"
 
-export default function UserPage(){
-    const {user} = useContext(AuthContext)
+export default function UserPage() {
+    const { user } = useContext(AuthContext)
     console.log(user)
-    return(
+    return (
         <Container>
             <Link to="/home">
-            <img src={back}/>
+                <img src={back} alt="Back"/>
             </Link>
             <InputsContainer>
-            <input
-            placeholder={user.name}
-            disabled/>
-            <input
-            placeholder={user.cpf}
-            disabled/>
-            <input
-            placeholder={user.email}
-            disabled/>
-            <Link to={`/users/${user.id}/update`}>
-            <button>ATUALIZAR</button>
-            </Link>
+                <input
+                    placeholder={user.name}
+                    disabled />
+                <input
+                    placeholder={user.cpf}
+                    disabled />
+                <input
+                    placeholder={user.email}
+                    disabled />
+                <Link to={`/users/${user.id}/update`}>
+                    <button>ATUALIZAR</button>
+                </Link>
             </InputsContainer>
         </Container>
     )

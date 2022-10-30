@@ -25,7 +25,7 @@ export default function HomePage() {
                 setPageLoading(false)
             })
             .catch(res => alert(res.response.data.message))
-    }, []) 
+    }, [user]) 
 
 if(pageLoading === true){
     return <Loading/>

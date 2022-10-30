@@ -10,50 +10,52 @@ export default function UserUpdatePage() {
     const navigate = useNavigate()
     const { id } = useParams()
     const { user, setUser } = useContext(AuthContext)
-    const [form, setForm] = useState({ name:"", cpf: user.cpf, email: "", currentPassword: "", newPassword: "" })
-    console.log(user)
+    const [form, setForm] = useState({ name: "", cpf: user.cpf, email: "", currentPassword: ""})
     function handleChange(e) {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
-    console.log(form)
 
     function post(e) {
-        e.preventDefault()
-        const config = { headers: { "Authorization": `Bearer ${user.token}` } }
+     e.preventDefault()
+     
+
+       const config = { headers: { "Authorization": `Bearer ${user.token}` } }
         axios.put("https://mock-api.driven.com.br/api/v4/driven-plus/users/", form, config)
-        .then(res => {
-           setUser({...user, name:res.data.name, email:res.data.email, password:res.data.password})
-           navigate(`/users/${id}`)
-        })
-        .catch(res =>alert(res.response.data.message))
+            .then(res => {
+                setUser({ ...user, name: res.data.name, email: res.data.email, password: res.data.password })
+                navigate(`/users/${id}`)
+            })
+            .catch(res => {
+                console.log(res.response.data)
+                alert(res.response.data.message)})
     }
 
     return (
         <Container>
             <Link to={`/users/${user.id}`}>
-                <img src={back} />
+                <img src={back} alt="Back"/>
             </Link>
             <InputsContainer onSubmit={post}>
                 <input
-                type="text"
+                    type="text"
                     placeholder={user.name}
                     name="name"
                     value={form.name}
                     onChange={handleChange}
                 />
                 <input
-                placeholder={user.cpf}
-                disabled
-                     />
+                    placeholder={user.cpf}
+                    disabled
+                />
                 <input
-                type="email"
+                    type="email"
                     placeholder={user.email}
                     name="email"
                     value={form.email}
                     onChange={handleChange}
                 />
                 <input
-                type="password"
+                    type="password"
                     placeholder="Senha atual"
                     name="currentPassword"
                     value={form.currentPassword}
@@ -61,7 +63,7 @@ export default function UserUpdatePage() {
                     required
                 />
                 <input
-                type="password"
+                    type="password"
                     placeholder="Nova senha"
                     name="newPassword"
                     value={form.newPassword}
